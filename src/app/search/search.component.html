@@ -1,0 +1,46 @@
+<section>
+    <form [formGroup]="searchForm">
+        <label>
+           <input type="text" (keyup)="searchTerm.next($event)" formControlName="search" placeholder="Pesquisar heróis..." />
+
+           <div *ngIf="loading">
+                <p class="search-message">Pesquisando</p>
+                <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+           </div>
+        </label>
+
+    </form>
+
+
+    <div *ngIf="searchResults">
+      <div class="results" >
+        <div class="repo" *ngFor="let result of paginationElements | paginate: { itemsPerPage: 6, currentPage: page }">
+
+            <div>
+                <img loading="lazy" [attr.src]="result.thumbnail.path +'.'+ result.thumbnail.extension"
+                    width="200"
+                    height="auto"
+                    alt="avatar"
+                />
+                <h2><a href="{{result.urls[0].url}}" target="_blank">{{result.name}}</a></h2>
+            <p></p>
+
+            </div>
+
+            <button  mat-icon-button style="border: none;" (click)="toogleFav(result.id)" >
+              <span class="material-icons-sharp" style="text-align:left;cursor: pointer;" [innerText]="isMyFav(result.id)==true?'star': 'star_border'" ></span>
+          </button>
+        </div>
+    </div>
+        <pagination-controls (pageChange)="page = $event" (pageBoundsCorrection)="page = $event"
+        previousLabel="Anterior"
+        nextLabel="Próximo"></pagination-controls>
+    </div>
+
+    <div *ngIf="errorMessage" class="errorMessage">
+        <h2>Error</h2>
+        <p class="error">{{errorMessage}}</p>
+    </div>
+
+
+</section>
